@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from models.unet import UNet
 from schedulars.linear import LinearSchedular
+from trainer import Trainer
 from tqdm import tqdm
 from copy import deepcopy
 
@@ -82,4 +83,11 @@ def test_schedular():
     plt.show()
 
 
-test_schedular()
+def test_trainer():
+    loader = load_data()
+    unet = UNet()
+    schedular = LinearSchedular(400, 0.0001, 0.002)
+    trainer = Trainer(unet, schedular, "checkpoints/trainer-test.pt")
+    trainer.train(loader)
+
+test_trainer()

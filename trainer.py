@@ -1,5 +1,6 @@
+import torch
+import numpy as np
 from torch import nn, optim
-
 class Trainer:
 
     def __init__(self, model, schedular, checkpoint_dir=None, device="cpu"):
@@ -16,13 +17,15 @@ class Trainer:
         for epoch in range(epochs):
             for batch, x in enumerate(loader):
                 x = x.to(self.device)
-                t = torch.randint(0, self.schedular.num_steps)
+                t = np.random.randint(0, self.schedular.num_steps)
                 noisy, noise = self.schedular.add_noise(x, t)
                 y = self.model(noisy)
                 loss = loss_fn(y, noise)
-                optimizer.backward()
+                optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-                print(f"epoch {epoch+1}/{len(epochs)} batch {batch+1}/{len(loader)} --- loss: {loss.item()}")
+                print(f"epoch {epoch+1}/{epochs} batch {batch+1}/{len(loader)} --- loss: {loss.item()}")
+                if self.checkpoint_dir:
+                    torch.save(self.model.state_dict(), self.checkpoint_dir)
 
 
