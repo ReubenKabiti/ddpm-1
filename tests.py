@@ -8,6 +8,7 @@ from schedulars.linear import LinearSchedular
 from trainer import Trainer
 from tqdm import tqdm
 from copy import deepcopy
+from generator import generate, to_pil
 
 import torch
 
@@ -90,4 +91,11 @@ def test_trainer():
     trainer = Trainer(unet, schedular, "checkpoints/trainer-test.pt")
     trainer.train(loader)
 
-test_trainer()
+def test_generator():
+    schedular = LinearSchedular(400, 0.0001, 0.002)
+    img = generate(schedular, model_path="checkpoints/trainer-test.pt")
+    img = to_pil(img)
+    plt.imshow(img)
+
+
+test_generator()
