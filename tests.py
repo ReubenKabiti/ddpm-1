@@ -4,11 +4,13 @@ from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from models.unet import UNet
+from schedulars.linear import LinearSchedular
+from tqdm import tqdm
+from copy import deepcopy
 
 import torch
 
-def test_unet():
-
+def load_data():
     dataset = MNIST28(
         transform=Compose([
             ToTensor(),
@@ -17,6 +19,12 @@ def test_unet():
     )
 
     loader = DataLoader(dataset, batch_size=32)
+    return dataset
+
+
+def test_unet():
+
+    loader = load_data()
 
     unet = UNet()
 
@@ -52,3 +60,23 @@ def test_unet():
     grid = ToPILImage()(grid)
     plt.imshow(grid)
     plt.show()
+
+
+def test_schedular():
+    loader = load_data()
+    schedular = LinearSchedular(1000, 0.001, 0.02)
+    x = next(iter(loader))[:1]
+    y = x.copy()
+
+    for t in tqdm(torch.arange(1, schular.num_steps, 100)):
+        noised, _ = schedular.add_noise(y[-1:], t)
+        y = torch.cat([y, noised], dim=0)
+    
+    y = y*0.5 + 0.5
+    grid = make_grid(y)
+    grid = ToPILImage()(grid)
+    plt.imshow(grid)
+    plt.show()
+
+
+test_schedular()
