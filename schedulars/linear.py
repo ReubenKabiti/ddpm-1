@@ -7,7 +7,7 @@ class LinearSchedular:
         self.start_beta = start_beta
         self.end_beta = end_beta
 
-        self.beta = np.linspace(start_beta, end_beta, num_steps, device=device)
+        self.beta = torch.linspace(start_beta, end_beta, num_steps, device=device)
         self.alpha = 1 - self.beta
         self.alpha_cumprod = self.alpha.cumprod(dim=0)
     

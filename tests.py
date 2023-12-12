@@ -19,7 +19,7 @@ def load_data():
     )
 
     loader = DataLoader(dataset, batch_size=32)
-    return dataset
+    return loader
 
 
 def test_unet():
@@ -64,15 +64,18 @@ def test_unet():
 
 def test_schedular():
     loader = load_data()
-    schedular = LinearSchedular(1000, 0.001, 0.02)
+    schedular = LinearSchedular(400, 0.0001, 0.002)
     x = next(iter(loader))[:1]
-    y = x.copy()
+    y = deepcopy(x)
 
-    for t in tqdm(torch.arange(1, schular.num_steps, 100)):
+    for t in tqdm(torch.arange(1, schedular.num_steps, 10)):
         noised, _ = schedular.add_noise(y[-1:], t)
         y = torch.cat([y, noised], dim=0)
     
-    y = y*0.5 + 0.5
+    for i, item in enumerate(y):
+        y[i] = (item - item.min())/(item.max() - item.min())
+    print(y.shape, x.shape)
+    # y = y*0.5 + 0.5
     grid = make_grid(y)
     grid = ToPILImage()(grid)
     plt.imshow(grid)
