@@ -60,8 +60,8 @@ class Upsample(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self):
-        super().__init__(channels=3)
+    def __init__(self, channels=3):
+        super().__init__()
         self.c1 = ConvBlock(channels, 32)
         self.c2 = ConvBlock(32, 32)
         self.d1 = Downsample(32, 64)
