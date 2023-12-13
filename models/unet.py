@@ -61,8 +61,8 @@ class Upsample(nn.Module):
 
 class UNet(nn.Module):
     def __init__(self):
-        super().__init__()
-        self.c1 = ConvBlock(1, 32)
+        super().__init__(channels=3)
+        self.c1 = ConvBlock(channels, 32)
         self.c2 = ConvBlock(32, 32)
         self.d1 = Downsample(32, 64)
         self.c3 = ConvBlock(64, 64)
@@ -75,7 +75,7 @@ class UNet(nn.Module):
         self.c7 = ConvBlock(64, 64)
         self.u2 = Upsample(64, 32)
         self.c8 = ConvBlock(64, 32)
-        self.c9 = ConvBlock(32, 1, activation="tanh")
+        self.c9 = ConvBlock(32, channels, activation="tanh")
 
     def forward(self, x: torch.Tensor, t: int):
         B, C, H, W = x.shape

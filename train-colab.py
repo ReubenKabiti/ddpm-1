@@ -1,6 +1,6 @@
 from pipelines import SimplePipeline
 from torchvision.transforms import Compose, ToTensor, Lambda, Resize, CenterCrop
-from torchvision.datasets import MNIST
+from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader, Subset
 import matplotlib.pyplot as plt
 import argparse
@@ -13,7 +13,7 @@ args = parser.parse_args()
 num_examples = int(args.num_examples)
 num_epochs = int(args.num_epochs)
 
-dataset = MNIST(
+dataset = CIFAR10(
     root="datasets",
     download=True,
     transform=Compose([
