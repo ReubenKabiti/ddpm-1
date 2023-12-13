@@ -15,7 +15,7 @@ class Trainer:
         self.model.train()
 
         for epoch in range(epochs):
-            for batch, x in enumerate(loader):
+            for batch, (x, _ ) in enumerate(loader):
                 x = x.to(self.device)
                 t = np.random.randint(0, self.schedular.num_steps)
                 noisy, noise = self.schedular.add_noise(x, t)
