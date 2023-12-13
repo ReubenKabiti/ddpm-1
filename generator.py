@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 @torch.no_grad()
-def generate(schedular, num_images=1, model_path=None, w=28, h=28, device="cpu"):
-    img = torch.randn(num_images, 1, w, h, device=device)
+def generate(schedular, num_images=1, model_path=None, w=28, h=28, device="cpu", channels=3):
+    img = torch.randn(num_images, channels, w, h, device=device)
     model = UNet().to(device)
     if model_path:
         model.load_state_dict(torch.load(model_path))
