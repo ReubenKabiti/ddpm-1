@@ -8,7 +8,7 @@ from tqdm import tqdm
 @torch.no_grad()
 def generate(schedular, num_images=1, model_path=None, w=28, h=28, device="cpu"):
     img = torch.randn(num_images, 1, w, h, device=device)
-    model = UNet()
+    model = UNet().to(device)
     if model_path:
         model.load_state_dict(torch.load(model_path))
     
@@ -28,7 +28,7 @@ def generate(schedular, num_images=1, model_path=None, w=28, h=28, device="cpu")
         std_div = beta.sqrt()
         img = mean + std_div*torch.randn_like(p_noise)
         
-    return img
+    return img.cpu()
             
 
 def to_pil(image):
