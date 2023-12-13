@@ -77,9 +77,19 @@ class UNet(nn.Module):
         self.c8 = ConvBlock(64, 32)
         self.c9 = ConvBlock(32, 1, activation="tanh")
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor, t: int):
+        B, C, H, W = x.shape
+        device = x.device
+
+        image_size = C*H*W
+
+        inds = torch.linspace(0, image_size, image_size, device=device).repeat(B, 1).view(-1, C, H, W)
+
+        phase = t/(1000**(2*inds/image_size))
+        pe = phase.sin()
+
         skips = []
-        x = self.c2(self.c1(x))
+        x = self.c2(self.c1(x + pe))
         skips.append(x)
         x = self.c4(self.c3(self.d1(x)))
         skips.append(x)

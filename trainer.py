@@ -19,7 +19,7 @@ class Trainer:
                 x = x.to(self.device)
                 t = np.random.randint(0, self.schedular.num_steps)
                 noisy, noise = self.schedular.add_noise(x, t)
-                y = self.model(noisy)
+                y = self.model(noisy, t)
                 loss = loss_fn(y, noise)
                 optimizer.zero_grad()
                 loss.backward()

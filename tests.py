@@ -34,24 +34,24 @@ def test_unet():
 
     checkpoint_location = "checkpoints/unet-test.pt"
     # train the unet
-    unet.train()
-    loss_fn = torch.nn.MSELoss()
-    optim = torch.optim.Adam(unet.parameters(), lr=3e-4)
+    # unet.train()
+    # loss_fn = torch.nn.MSELoss()
+    # optim = torch.optim.Adam(unet.parameters(), lr=3e-4)
 
-    for epoch in range(100):
-        y = unet(x_test)
-        loss = loss_fn(y, x_test)
-        optim.zero_grad()
-        loss.backward()
-        optim.step()
-        print(f"epoch {epoch} -- loss: {loss.item()}")
-        torch.save(unet.state_dict(), checkpoint_location)
+    # for epoch in range(100):
+    #     y = unet(x_test, 0)
+    #     loss = loss_fn(y, x_test)
+    #     optim.zero_grad()
+    #     loss.backward()
+    #     optim.step()
+    #     print(f"epoch {epoch} -- loss: {loss.item()}")
+    #     torch.save(unet.state_dict(), checkpoint_location)
 
     # evaluate the model
     unet.load_state_dict(torch.load(checkpoint_location))
     unet.eval()
     with torch.no_grad():
-        y_test = unet(x_test)
+        y_test = unet(x_test, 0)
 
     y_test = torch.cat([y_test, x_test], dim=0)
     for i, y in enumerate(y_test):
@@ -93,9 +93,10 @@ def test_trainer():
 
 def test_generator():
     schedular = LinearSchedular(400, 0.0001, 0.002)
-    img = generate(schedular, model_path="checkpoints/trainer-test.pt")
+    img = generate(schedular, model_path="checkpoints/trainer-test.pt", num_images=1)
     img = to_pil(img)
     plt.imshow(img)
+    plt.show()
 
 
 test_generator()
